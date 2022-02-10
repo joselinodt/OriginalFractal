@@ -1,38 +1,45 @@
-float theta;   
+int size = 750;
+color c = 33;
+int shape = 1;
+int count =  0;
 
-void setup() {
-  size(640, 360);
+public void setup() {
+  size(800, 800);
+  rectMode(CENTER);
+  noStroke();
 }
-
-void draw() {
-  background(0);
-  frameRate(30);
-  stroke(255);
-  float a = (mouseX / (float) width) * 134;
-  theta = radians(a);
-  translate(width/2,height);
-  line(0,0,0,-120);
-  translate(0,-120);
-  branch(120);
-  
-  System.out.println(a);
-
+ 
+void draw() { 
+  background(255); 
+  if (shape < 6) { 
+    fill(220,220,220);
+    myFractal(width/2, height/2, size, shape, c);
+  } 
+ 
+  count++;
+ 
+  if (count % 60 == 0) {
+    count = 0;
+    shape++;
+    if (shape > 6) {
+      shape=1;
+    }
+  }
 }
-
-void branch(float h) {
-  h *= 0.66;
-  if (h > 2) {   
-    pushMatrix();// Save the current state of transformation (i.e. where are we now)
-    rotate(theta);   // Rotate by theta
-    line(0, 0, 0, -h);  // Draw the branch
-    translate(0, -h); // Move to the end of the branch
-    branch(h);  
-    popMatrix();// Ok, now call myself to draw two new branches!!     // Whenever we get back here, we "pop" in order to restore the previous matrix state
-    
-    // Repeat the same thing, only branch off to the "left" this time!
-    rotate(-theta);
-    line(0, 0, 0, -h);
-    translate(0, -h);
-    branch(h);
+ 
+public void myFractal(float x, float y, float size, int num, color c) 
+{
+ 
+  rect(x + size/3, y - size/3, size/3, size/3);
+  rect(x - size/3, y - size/3, size/3, size/3);
+  rect(x - size/3, y + size/3, size/3, size/3);
+  rect(x + size/3, y + size/3, size/3, size/3);
+ 
+  if (mousePressed && num-- > 1) {
+    myFractal(x, y, size/3, num, color(32));
+    myFractal(x, y-size/3, size/3, num, c);
+    myFractal(x+size/3, y, size/3, num, c);
+    myFractal(x-size/3, y, size/3, num, c);
+    myFractal(x, y+size/3, size/3, num, c);
   }
 }
